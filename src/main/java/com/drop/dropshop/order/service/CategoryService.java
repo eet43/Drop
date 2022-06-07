@@ -1,20 +1,33 @@
 package com.drop.dropshop.order.service;
 
+import com.drop.dropshop.order.entity.Category;
 import com.drop.dropshop.order.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CategoryService {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
-    public Long
+    public Long saveCategory(Category category) {
+        categoryRepository.save(category);
+        return category.getId();
+    }
 
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
+    }
+
+    public Category findOne(Long id) {
+        return categoryRepository.findById(id);
+    }
 
 
 }

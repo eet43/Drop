@@ -1,5 +1,9 @@
 package com.drop.dropshop.order.service;
 
+import com.drop.dropshop.order.entity.Item;
+import com.drop.dropshop.order.entity.Order;
+import com.drop.dropshop.order.repository.ItemRepository;
+import com.drop.dropshop.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,10 +13,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class OrderServiceImpl implements OrderService{
 
-    //userRepository 받아야함
+    private final ItemRepository itemRepository;
+    private final OrderRepository orderRepository;
+
 
     @Override
     @Transactional
-    public Long order(Long userId, Long itemId) {
+    public Long saveOrder(Long itemId, Long memberId, Long deliveryId) {
+        // 엔티티 조회
+        Item findItem = itemRepository.findById(itemId);
+
+        Order order = Order.createOrder(findItem, memberId, deliveryId);
+        orderRepository.save(order);
+
+        return order.getId();
+    }
+    @Transactional
+    @Override
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId);
+        order.cancelOrder();
     }
 }
