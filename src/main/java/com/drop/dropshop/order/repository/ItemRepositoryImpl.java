@@ -8,6 +8,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+/**
+ * 2022-06-07
+ * 아이템 DB 조작 클래스
+ * 1. 아이템 등록
+ * 2. 특정 아이템 조회
+ * 3. 전체 아이템 조회
+ */
 @Repository
 public class ItemRepositoryImpl implements ItemRepository{
 

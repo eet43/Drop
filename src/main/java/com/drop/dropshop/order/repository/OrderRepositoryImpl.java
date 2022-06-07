@@ -13,7 +13,6 @@ import java.util.List;
  * 1. 주문 등록
  * 2. 특정 주문 조회
  * 3. 전체 주문 조회
- * 4. 주문 취소
  */
 
 @Repository
