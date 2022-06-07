@@ -7,10 +7,14 @@ import com.drop.dropshop.droneCompany.exception.ErrorCode;
 import com.drop.dropshop.droneCompany.repository.DroneCompanyRepository;
 import okhttp3.*;
 import org.json.JSONObject;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.config.PageableHandlerMethodArgumentResolverCustomizer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -40,7 +44,6 @@ public class DroneCompanyService {
         try {
             Response response = client.newCall(request).execute();
             String responseBody = response.body().string();
-            System.out.println(responseBody);
             JSONObject jsonObject = new JSONObject(responseBody);
             if (jsonObject.has("match_cnt")) {
                 return true;
@@ -109,5 +112,12 @@ public class DroneCompanyService {
         return droneCompany;
     }
 
-
+    /**
+     * 드론 업체 조회
+     * 등록 일시를 기준으로 정렬하도록 하였습니다.
+     * 기본값 : page = 1, pageSize = 10, sort = createAt DESC
+     */
+    public Page<DroneCompany> show(Pageable pageable) {
+        return droneCompanyRepository.findAll(pageable);
+    }
 }
