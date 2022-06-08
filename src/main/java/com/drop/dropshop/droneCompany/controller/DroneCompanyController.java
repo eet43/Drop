@@ -1,8 +1,10 @@
 package com.drop.dropshop.droneCompany.controller;
 
 import com.drop.dropshop.droneCompany.dto.DroneCompanyDto;
+import com.drop.dropshop.droneCompany.dto.UUIDResponse;
 import com.drop.dropshop.droneCompany.entity.DroneCompany;
 import com.drop.dropshop.droneCompany.exception.BusinessNumberNotValidException;
+import com.drop.dropshop.droneCompany.exception.NoResourceException;
 import com.drop.dropshop.droneCompany.response.PagingResponseDetails;
 import com.drop.dropshop.droneCompany.response.ResponseDetails;
 import com.drop.dropshop.droneCompany.service.DroneCompanyService;
@@ -18,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
+import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -52,5 +54,16 @@ public class DroneCompanyController {
                 droneCompanyList.getPageable().getPageSize(),
                 httpStatus, path);
         return new ResponseEntity<>(pagingResponseDetails, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/api/drone-companies/{id}")
+    @ApiOperation(value = "드론 업체 삭제", notes = "관리자가 드론 업체를 삭제합니다.")
+    public ResponseEntity<?> deleteDroneCompany(@PathVariable UUID id) throws NoResourceException {
+        UUID result = droneCompanyService.delete(id);
+        UUIDResponse uuidResponse = new UUIDResponse(result.toString());
+        int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
+        String path = "/api/drone-companies";
+        ResponseDetails responseDetails = new ResponseDetails(new Date(), uuidResponse , httpStatus, path);
+        return new ResponseEntity<>(responseDetails, HttpStatus.OK);
     }
 }
