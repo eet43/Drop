@@ -4,6 +4,7 @@ import com.drop.dropshop.droneCompany.dto.DroneCompanyDto;
 import com.drop.dropshop.droneCompany.entity.DroneCompany;
 import com.drop.dropshop.droneCompany.exception.BusinessNumberNotValidException;
 import com.drop.dropshop.droneCompany.exception.ErrorCode;
+import com.drop.dropshop.droneCompany.exception.NoResourceException;
 import com.drop.dropshop.droneCompany.repository.DroneCompanyRepository;
 import okhttp3.*;
 import org.json.JSONObject;
@@ -13,8 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.config.PageableHandlerMethodArgumentResolverCustomizer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -87,6 +90,10 @@ public class DroneCompanyService {
         return validateDuplicateId(newId);
     }
 
+    public Optional<DroneCompany> findByCompanyId(UUID companyId) {
+        return droneCompanyRepository.findByCompanyId(companyId);
+    }
+
     /**
      * 드론 업체 등록
      */
@@ -119,5 +126,19 @@ public class DroneCompanyService {
      */
     public Page<DroneCompany> show(Pageable pageable) {
         return droneCompanyRepository.findAll(pageable);
+    }
+
+    /**
+     * 드론 업체 삭제
+     * company Id 를 이용하여 삭제합니다.
+     */
+    public UUID delete(UUID companyId) throws NoResourceException {
+        if (findByCompanyId(companyId).isEmpty()) {
+            String errorMessage = "삭제 요청 받은 Company Id : " + companyId;
+            throw new NoResourceException("삭제 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
+        }
+
+        droneCompanyRepository.deleteByCompanyId(companyId);
+        return companyId;
     }
 }
