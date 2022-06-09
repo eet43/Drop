@@ -6,27 +6,29 @@ import com.drop.dropshop.droneCompany.exception.BusinessNumberNotValidException;
 import com.drop.dropshop.droneCompany.exception.ErrorCode;
 import com.drop.dropshop.droneCompany.exception.NoResourceException;
 import com.drop.dropshop.droneCompany.repository.DroneCompanyRepository;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.json.JSONObject;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.config.PageableHandlerMethodArgumentResolverCustomizer;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @Transactional
 public class DroneCompanyService {
     private DroneCompanyRepository droneCompanyRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public DroneCompanyService(DroneCompanyRepository droneCompanyRepository) {
+    public DroneCompanyService(DroneCompanyRepository droneCompanyRepository, PasswordEncoder passwordEncoder) {
         this.droneCompanyRepository = droneCompanyRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -52,7 +54,7 @@ public class DroneCompanyService {
                 return true;
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error("validateBuisenessNumber IOException", e);
         }
         return false;
     }
@@ -115,6 +117,9 @@ public class DroneCompanyService {
         String loginId = createLoginId(droneCompanyDto.getCompanyName(), droneCompanyDto.getCompanyContract());
         droneCompany.setLoginId(loginId);
 
+        // 비밀번호 암호화
+        droneCompany.setLoginPassword(passwordEncoder.encode(droneCompanyDto.getCompanyContract()));
+
         droneCompanyRepository.save(droneCompany);
         return droneCompany;
     }
@@ -141,4 +146,6 @@ public class DroneCompanyService {
         droneCompanyRepository.deleteByCompanyId(companyId);
         return companyId;
     }
+
+
 }
