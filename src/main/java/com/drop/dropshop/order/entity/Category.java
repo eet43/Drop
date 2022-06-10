@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Category {
     @Id
     @GeneratedValue
@@ -24,7 +24,6 @@ public class Category {
     private List<Item> items = new ArrayList<>();
 
     private int cost; // 추가 금액
-
 
 
 }

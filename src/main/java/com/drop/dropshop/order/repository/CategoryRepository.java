@@ -32,4 +32,10 @@ public class CategoryRepository {
         return em.find(Category.class, id);
     }
 
+    public List<Category> findAllWithItem() {
+        return em.createQuery(
+                "select distinct c from Category c" +
+                                " join fetch c.items i", Category.class)
+                .getResultList();
+    }
 }
