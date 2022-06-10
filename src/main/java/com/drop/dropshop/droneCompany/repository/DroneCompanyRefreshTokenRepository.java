@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface DroneCompanyRefreshTokenRepository extends JpaRepository<RefreshToken, Long>  {
     Optional<RefreshToken> findRefreshTokenByIdx(long refreshIdx);
+
+    void deleteByCompanyId(String username);
 }
