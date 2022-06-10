@@ -45,4 +45,11 @@ public class AuthController {
         ResponseDetails responseDetails = new ResponseDetails(new Date(), tokenDto, httpStatus, path);
         return new ResponseEntity<>(responseDetails, HttpStatus.OK);
     }
+
+    @PostMapping("/api/drone-companies/logout")
+    @ApiOperation(value = "드론 업체 로그아웃", notes = "드론 업체가 로그아웃을 진행합니다.")
+    public ResponseEntity<?> logoutToken(HttpServletRequest request) throws AccessDeniedException {
+        authService.logout(request);
+        return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+    }
 }
