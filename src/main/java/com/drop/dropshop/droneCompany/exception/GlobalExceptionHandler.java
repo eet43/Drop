@@ -17,6 +17,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NoResourceException.class)
+    public ResponseEntity<ErrorResponse> noResourceException(NoResourceException ex) {
+        log.error("NoResourceException",ex);
+        ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getDetail());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex){
         log.error("handleException",ex);

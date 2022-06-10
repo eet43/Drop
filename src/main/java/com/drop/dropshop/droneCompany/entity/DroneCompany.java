@@ -35,7 +35,7 @@ public class DroneCompany extends Timestamped {
     private String loginId;
 
     @ApiModelProperty(example = "드론 업체가 로그인 시 사용할 password")
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false, length = 20)
     private String loginPassword;
 
     @ApiModelProperty(example = "드론 업체명")
