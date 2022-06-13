@@ -4,14 +4,15 @@ import com.drop.dropshop.droneCompany.dto.DroneModelDto;
 import com.drop.dropshop.droneCompany.entity.DroneModel;
 import com.drop.dropshop.droneCompany.exception.ErrorCode;
 import com.drop.dropshop.droneCompany.exception.NoResourceException;
-import com.drop.dropshop.droneCompany.repository.DroneCompanyRepository;
 import com.drop.dropshop.droneCompany.repository.DroneModelRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class DroneModelService {
     private DroneModelRepository droneModelRepository;
 
@@ -44,6 +45,9 @@ public class DroneModelService {
         return droneModel;
     }
 
+    /**
+     * 드론 모델 수정
+     */
     public DroneModel update(DroneModelDto requestDto, UUID droneModelId) throws NoResourceException {
         Optional<DroneModel> droneModelOptional = droneModelRepository.findByModelId(droneModelId);
         if(droneModelOptional.isEmpty()){
@@ -53,5 +57,18 @@ public class DroneModelService {
         DroneModel droneModel = droneModelOptional.get();
         droneModel.update(requestDto);
         return droneModel;
+    }
+
+    /**
+     * 드론 모델 삭제
+     */
+    public UUID delete(UUID droneModelId) throws NoResourceException {
+        if(droneModelRepository.findByModelId(droneModelId).isEmpty()){
+            String errorMessage = "삭제 요청 받은 Drone Model Id : " + droneModelId;
+            throw new NoResourceException("삭제 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
+        } else {
+            droneModelRepository.deleteByModelId(droneModelId);
+        }
+        return droneModelId;
     }
 }
