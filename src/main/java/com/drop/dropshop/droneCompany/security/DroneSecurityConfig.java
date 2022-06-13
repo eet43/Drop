@@ -27,7 +27,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class DroneSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtProvider jwtProvider;
-    private final LogoutSuccessHandler logoutSuccessHandler;
 
     @Bean
     public PasswordEncoder encodePassword() {
