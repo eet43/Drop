@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CreateCategoryResponse {
-    public Long id;
+public class CreateResponse {
+    private Long id;
 }

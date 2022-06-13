@@ -1,8 +1,7 @@
 package com.drop.dropshop.order.controller;
 
-import com.drop.dropshop.order.dto.CreateOrderRequest;
+import com.drop.dropshop.order.dto.CreateResponse;
 import com.drop.dropshop.order.dto.OrderDto;
-import com.drop.dropshop.order.dto.CreateOrderResponse;
 import com.drop.dropshop.order.entity.Order;
 import com.drop.dropshop.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +30,8 @@ public class OrderController {
         return result;
     }
 
-    @PostMapping("/api/orders")
-    public CreateOrderResponse postOrder(@RequestBody @Valid OrderDto) {
-
-    }
+//    @PostMapping("/api/orders")
+//    public CreateResponse postOrder(@RequestBody @Valid OrderDto) {
+//
+//    }
 }

@@ -1,6 +1,6 @@
 package com.drop.dropshop.order.controller;
 
-import com.drop.dropshop.order.dto.CreateCategoryResponse;
+import com.drop.dropshop.order.dto.CreateResponse;
 import com.drop.dropshop.order.dto.SimpleCategoryDto;
 import com.drop.dropshop.order.dto.Result;
 import com.drop.dropshop.order.dto.SimpleCategories;
@@ -28,7 +28,7 @@ public class CategoryController {
 
     @GetMapping("/api/categories")
     public Result findCategories() {
-        List<Category> categories = categoryService.findAllWithItem();
+        List<Category> categories = categoryService.findAll();
 
         List<SimpleCategories> collect = categories.stream()
                 .map(c -> new SimpleCategories(c.getName()))
@@ -37,13 +37,13 @@ public class CategoryController {
     }
 
     @PostMapping("/api/categories")
-    public CreateCategoryResponse postCategory(@RequestBody @Valid SimpleCategoryDto categoryDto) {
+    public CreateResponse postCategory(@RequestBody @Valid SimpleCategoryDto categoryDto) {
         Category category = new Category();
         category.setName(categoryDto.getName());
         category.setCost(categoryDto.getCost());
 
         Long id = categoryService.saveCategory(category);
 
-        return new CreateCategoryResponse(id);
+        return new CreateResponse(id);
     }
 }
