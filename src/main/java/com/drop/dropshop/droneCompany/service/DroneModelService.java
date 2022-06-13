@@ -2,10 +2,13 @@ package com.drop.dropshop.droneCompany.service;
 
 import com.drop.dropshop.droneCompany.dto.DroneModelDto;
 import com.drop.dropshop.droneCompany.entity.DroneModel;
+import com.drop.dropshop.droneCompany.exception.ErrorCode;
+import com.drop.dropshop.droneCompany.exception.NoResourceException;
 import com.drop.dropshop.droneCompany.repository.DroneCompanyRepository;
 import com.drop.dropshop.droneCompany.repository.DroneModelRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -41,4 +44,14 @@ public class DroneModelService {
         return droneModel;
     }
 
+    public DroneModel update(DroneModelDto requestDto, UUID droneModelId) throws NoResourceException {
+        Optional<DroneModel> droneModelOptional = droneModelRepository.findByModelId(droneModelId);
+        if(droneModelOptional.isEmpty()){
+            String errorMessage = "수정 요청 받은 Drone Model Id : " + droneModelId;
+            throw new NoResourceException("수정 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
+        }
+        DroneModel droneModel = droneModelOptional.get();
+        droneModel.update(requestDto);
+        return droneModel;
+    }
 }
