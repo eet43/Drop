@@ -2,6 +2,7 @@ package com.drop.dropshop.droneCompany.entity;
 
 import com.drop.dropshop.droneCompany.dto.DroneModelDto;
 import com.drop.dropshop.droneCompany.util.Timestamped;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class DroneModel extends Timestamped {
     @Id //기본키라는 것을 명시
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(example = "자동 증가되는 db 내 id")
+    @JsonIgnore
     private Long id;
 
     @ApiModelProperty(example = "드론 모델을 식별하는 uuid")
