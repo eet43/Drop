@@ -5,12 +5,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class UUIDResponse {
-    @ApiModelProperty(example = "uuid")
-    private final String uuid;
+public class TokenDto {
+    @ApiModelProperty(example = "accessToken")
+    private final Object accessToken;
+    @ApiModelProperty(example = "refreshIdx")
+    private final Object refreshIdx;
 }
