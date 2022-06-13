@@ -5,9 +5,12 @@ import com.drop.dropshop.droneCompany.entity.DroneModel;
 import com.drop.dropshop.droneCompany.exception.ErrorCode;
 import com.drop.dropshop.droneCompany.exception.NoResourceException;
 import com.drop.dropshop.droneCompany.repository.DroneModelRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -70,5 +73,9 @@ public class DroneModelService {
             droneModelRepository.deleteByModelId(droneModelId);
         }
         return droneModelId;
+    }
+
+    public Page<DroneModel> show(Pageable pageable) {
+        return droneModelRepository.findAll(pageable);
     }
 }
