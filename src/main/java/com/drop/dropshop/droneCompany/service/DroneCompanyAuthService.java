@@ -6,11 +6,14 @@ import com.drop.dropshop.droneCompany.dto.TokenDto;
 import com.drop.dropshop.droneCompany.exception.AccessDeniedException;
 import com.drop.dropshop.droneCompany.exception.ErrorCode;
 import com.drop.dropshop.droneCompany.repository.DroneCompanyRefreshTokenRepository;
+import com.drop.dropshop.droneCompany.security.DroneDetailsImpl;
 import com.drop.dropshop.droneCompany.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,5 +95,14 @@ public class DroneCompanyAuthService {
         result.put("accessToken", accessToken);
         result.put("refreshIdx", refreshTokenData.getIdx());
         return result;
+    }
+
+    /**
+     * 드론 업체 로그아웃
+     */
+    public void logout(HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        DroneDetailsImpl droneDetails = (DroneDetailsImpl) authentication.getPrincipal();
+        droneCompanyRefreshTokenRepository.deleteByCompanyId(droneDetails.getUsername());
     }
 }
