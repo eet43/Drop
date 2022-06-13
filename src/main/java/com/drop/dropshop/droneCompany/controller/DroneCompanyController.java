@@ -35,7 +35,7 @@ public class DroneCompanyController {
     @ApiOperation(value = "드론 업체 등록", notes = "관리자가 드론 업체를 등록합니다.")
     public ResponseEntity<?> createDroneCompany(@RequestBody DroneCompanyDto requestDto) throws BusinessNumberNotValidException {
         DroneCompany droneCompany = droneCompanyService.join(requestDto);
-        String path = "/api/drone-companies?id=" + droneCompany.getCompanyId();
+        String path = "/api/drone-companies/" + droneCompany.getCompanyId();
         int httpStatus = HttpStatusChangeInt.ChangeStatusCode("CREATED");
         ResponseDetails responseDetails = new ResponseDetails(new Date(), droneCompany, httpStatus, path);
         return new ResponseEntity<>(responseDetails, HttpStatus.CREATED);
