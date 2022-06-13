@@ -72,4 +72,15 @@ public class DroneModel extends Timestamped {
         this.lowestTemperature = requestDto.getLowestTemperature();
         this.maximumTemperature = requestDto.getMaximumTemperature();
     }
+
+    public void update(DroneModelDto requestDto) {
+        this.modelName = requestDto.getModelName();
+        this.flightWeight = requestDto.getFlightWeight();;
+        this.flightTime = requestDto.getFlightTime();
+        this.flightDistance = requestDto.getFlightDistance();
+        this.nightTimeFlight = requestDto.isNightTimeFlight();
+        this.camera = requestDto.isCamera();
+        this.lowestTemperature = requestDto.getLowestTemperature();
+        this.maximumTemperature = requestDto.getMaximumTemperature();
+    }
 }
