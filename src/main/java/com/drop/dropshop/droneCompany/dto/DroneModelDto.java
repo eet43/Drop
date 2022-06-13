@@ -10,11 +10,11 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class DroneModelDto {
     @ApiModelProperty(example = "드론 모델명")
-    private final String ModelName;
+    private final String modelName;
     @ApiModelProperty(example = "최대 적재 중량")
     private final double flightWeight;
     @ApiModelProperty(example = "최대 비행 시간")
-    private final Long flightTime;
+    private final int flightTime;
     @ApiModelProperty(example = "주행 가능 거리")
     private final double flightDistance;
     @ApiModelProperty(example = "야간 운행 허용 여부")

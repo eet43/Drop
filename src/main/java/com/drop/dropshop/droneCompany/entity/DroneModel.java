@@ -40,7 +40,7 @@ public class DroneModel extends Timestamped {
 
     @Column(nullable = false)
     @ApiModelProperty(example = "최대 비행 시간")
-    private Long flightTime;
+    private int flightTime;
 
     @Column(nullable = false)
     @ApiModelProperty(example = "주행 가능 거리")
