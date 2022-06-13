@@ -6,13 +6,18 @@ spring:
     password: 1234
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        one-indexed-parameters: true
 
 logging.level:
   org.hibernate.SQL: debug

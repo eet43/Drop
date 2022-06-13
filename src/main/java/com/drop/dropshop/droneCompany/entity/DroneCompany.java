@@ -2,12 +2,14 @@ package com.drop.dropshop.droneCompany.entity;
 
 import com.drop.dropshop.droneCompany.dto.DroneCompanyDto;
 import com.drop.dropshop.droneCompany.util.Timestamped;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -34,8 +36,9 @@ public class DroneCompany extends Timestamped {
     @ApiModelProperty(example = "드론 업체가 로그인 시 사용할 id")
     private String loginId;
 
+    @JsonIgnore
     @ApiModelProperty(example = "드론 업체가 로그인 시 사용할 password")
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false)
     private String loginPassword;
 
     @ApiModelProperty(example = "드론 업체명")
@@ -46,6 +49,7 @@ public class DroneCompany extends Timestamped {
     @Column(nullable = false, unique = true, length = 10)
     private String companyContract;
 
+    @JsonIgnore
     @ApiModelProperty(example = "드론 업체 사업자 번호")
     @Column(nullable = false, unique = true, length = 10)
     private String buisenessNumber;
@@ -54,6 +58,5 @@ public class DroneCompany extends Timestamped {
         this.companyName = droneCompanyDto.getCompanyName();
         this.companyContract = droneCompanyDto.getCompanyContract();
         this.buisenessNumber = droneCompanyDto.getBuisenessNumber();
-        this.loginPassword = droneCompanyDto.getCompanyContract();
     }
 }
