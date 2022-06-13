@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -31,5 +33,12 @@ class DroneModelServiceTest {
         DroneModelDto droneModelDto = new DroneModelDto("샤오미 TEST 수정용 드론", 21, 52, 30, false, false, -100, 200);
         droneModelService.update(droneModelDto, droneModel.getModelId());
         assertEquals(droneModelDto.getModelName(), droneModel.getModelName());
+    }
+
+    @Test
+    void 드론_모델_삭제() throws NoResourceException {
+        UUID droneModelId = 드론_모델_등록().getModelId();
+        UUID result = droneModelService.delete(droneModelId);
+        assertEquals(result, droneModelId);
     }
 }
