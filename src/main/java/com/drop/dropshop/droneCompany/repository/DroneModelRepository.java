@@ -10,4 +10,6 @@ public interface DroneModelRepository extends JpaRepository<DroneModel, Long> {
     Optional<DroneModel> findByModelName(String modelName);
 
     Optional<DroneModel> findByModelId(UUID droneModelId);
+
+    void deleteByModelId(UUID droneModelId);
 }
