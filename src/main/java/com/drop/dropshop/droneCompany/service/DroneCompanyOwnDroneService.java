@@ -76,6 +76,30 @@ public class DroneCompanyOwnDroneService {
         return companyDroneDetailList;
     }
 
+
+    /**
+     * 드론 업체의 보유 드론 조회 --> company_drone 테이블
+     */
+    public CompanyDrone validationCompanyDrone(UUID companyId, UUID companyDroneId) throws NoResourceException {
+        Optional<CompanyDrone> companyDroneOptional = droneCompanyOwnDroneRepository.findByCompanyIdAndCompanyDroneId(companyId, companyDroneId);
+        if (companyDroneOptional.isEmpty()) {
+            String errorMessage = "수정 요청 받은 Company Drone Id : " + companyDroneId;
+            throw new NoResourceException("드론 업체의 보유 드론 목록 조회 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
+        } else {
+            return companyDroneOptional.get();
+        }
+    }
+
+    /**
+     * 드론 업체의 보유 드론 상세 조회 --> company_own_drone 테이블
+     */
+    public void validationCompanyDroneDetail(UUID companyDroneId) throws NoResourceException {
+        if (droneCompanyOwnDroneDetailRepository.findAllByCompanyDroneId(companyDroneId).isEmpty()) {
+            String errorMessage = "수정 요청 받은 Company Drone Id : " + companyDroneId;
+            throw new NoResourceException("수정 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
+        }
+    }
+
     /**
      * 드론 업체의 보유 드론 등록
      */
@@ -116,40 +140,45 @@ public class DroneCompanyOwnDroneService {
      */
     public OwnDroneResponseDto update(OwnDroneEnrollDto requestDto, HttpServletRequest request, UUID companyDroneId) throws NoResourceException {
         DroneCompany droneCompany = authenticationDroneCompany(request);
-        Optional<CompanyDrone> companyDroneOptional = droneCompanyOwnDroneRepository.findByCompanyIdAndCompanyDroneId(droneCompany.getCompanyId(), companyDroneId);
 
-        // company_drone 테이블에 해당 데이터가 없는 경우
-        if (companyDroneOptional.isEmpty()) {
-            String errorMessage = "수정 요청 받은 Company Drone Id : " + companyDroneId;
-            throw new NoResourceException("수정 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
-        } else {
-            // company_drone 테이블에 해당 데이터는 있지만 company_own_drone 테이블에 해당 데이터가 없는 경우
-            if (droneCompanyOwnDroneDetailRepository.findAllByCompanyDroneId(companyDroneId).isEmpty()) {
-                String errorMessage = "수정 요청 받은 Company Drone Id : " + companyDroneId;
-                throw new NoResourceException("수정 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
-            } else {
-                droneCompanyOwnDroneDetailRepository.deleteAllByCompanyDroneId(companyDroneId);
-                droneCompanyOwnDroneDetailRepository.flush();
+        // company_drone 테이블에 해당 데이터는 있지만 company_own_drone 테이블에 해당 데이터가 없는 경우 검증
+        validationCompanyDroneDetail(companyDroneId);
 
-                // 업체의 드론 식별 후 업데이트
-                CompanyDrone companyDrone = companyDroneOptional.get();
-                companyDrone.update(requestDto);
+        droneCompanyOwnDroneDetailRepository.deleteAllByCompanyDroneId(companyDroneId);
+        droneCompanyOwnDroneDetailRepository.flush();
 
-                // 업체의 드론 모델 식별
-                DroneModel droneModel = findByModelId(companyDrone.getModelId());
+        // 업체의 드론 식별 후 업데이트
+        CompanyDrone companyDrone = validationCompanyDrone(droneCompany.getCompanyId(), companyDroneId);
+        companyDrone.update(requestDto);
 
-                List<CompanyDroneDetail> companyDroneDetailList = saveCompanyDroneDetailList(
-                        requestDto.getCompanyDroneDetailList(), companyDroneId);
+        // 업체의 드론 모델 식별
+        DroneModel droneModel = findByModelId(companyDrone.getModelId());
 
-                return new OwnDroneResponseDto(
-                        companyDroneId,
-                        companyDrone.getNum(),
-                        companyDrone.getOperableNum(),
-                        droneCompany,
-                        droneModel,
-                        companyDroneDetailList
-                );
-            }
-        }
+        List<CompanyDroneDetail> companyDroneDetailList = saveCompanyDroneDetailList(
+                requestDto.getCompanyDroneDetailList(), companyDroneId);
+
+        return new OwnDroneResponseDto(
+                companyDroneId,
+                companyDrone.getNum(),
+                companyDrone.getOperableNum(),
+                droneCompany,
+                droneModel,
+                companyDroneDetailList
+        );
+
+    }
+
+    /**
+     * 드론 업체 보유 드론 삭제
+     */
+    public UUID delete(OwnDroneEnrollDto requestDto, HttpServletRequest request, UUID companyDroneId) throws NoResourceException {
+        DroneCompany droneCompany = authenticationDroneCompany(request);
+        // 업체의 드론 식별
+        CompanyDrone companyDrone = validationCompanyDrone(droneCompany.getCompanyId(), companyDroneId);
+        // company_drone 테이블에 해당 데이터는 있지만 company_own_drone 테이블에 해당 데이터가 없는 경우 검증
+        validationCompanyDroneDetail(companyDroneId);
+        droneCompanyOwnDroneRepository.deleteByCompanyDroneId(companyDroneId);
+        droneCompanyOwnDroneDetailRepository.deleteAllByCompanyDroneId(companyDroneId);
+        return companyDroneId;
     }
 }
