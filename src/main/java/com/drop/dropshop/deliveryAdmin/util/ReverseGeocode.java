@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 public class ReverseGeocode {
-    public String ReverseGeo() {
+    public String ReverseGeo(String lonLat) {
         RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
@@ -17,20 +17,9 @@ public class ReverseGeocode {
         String body = "";
 
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
-        ResponseEntity<String> responseEntity = rest.exchange("https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=128.12345,37.98776&orders=addr&output=json", HttpMethod.GET, requestEntity, String.class);
-        HttpStatus httpStatus = responseEntity.getStatusCode();
-        int status = httpStatus.value();
+        ResponseEntity<String> responseEntity = rest.exchange("https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords="+lonLat+"&orders=addr&output=json", HttpMethod.GET, requestEntity, String.class);
         String response = responseEntity.getBody();
-//        System.out.println("Response status: " + status);
-//        System.out.println(response);
 
         return response;
-    }
-
-    public JSONArray fromStringToJson(String result){
-        JSONObject rjson = new JSONObject(result);
-        JSONArray results = rjson.getJSONArray("results");
-
-        return results;
     }
 }
