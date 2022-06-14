@@ -1,5 +1,6 @@
 package com.drop.dropshop.order.repository;
 
+import com.drop.dropshop.order.dto.OrderDto;
 import com.drop.dropshop.order.entity.Order;
 
 import java.util.List;

@@ -58,7 +58,7 @@ public class DroneModelController {
     @ApiOperation(value = "드론 모델 삭제", notes = "관리자가 드론 모델을 삭제합니다.")
     public ResponseEntity<?> deleteDroneModel(@PathVariable UUID id) throws NoResourceException {
         UUID result = droneModelService.delete(id);
-        UUIDDto uuidDto = new UUIDDto(result.toString());
+        UUIDDto uuidDto = new UUIDDto(result);
         String path = "/api/drone-models/" + id;
         int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
         ResponseDetails responseDetails = new ResponseDetails(new Date(), uuidDto, httpStatus, path);

@@ -15,4 +15,7 @@ public interface ItemRepository {
 
     // 특정 상품 조회
     Item findById(Long id);
+
+    // 특정 상품 삭제
+    void delete(Item item);
 }

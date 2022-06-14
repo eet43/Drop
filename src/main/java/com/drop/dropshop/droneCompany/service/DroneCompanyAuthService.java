@@ -40,7 +40,7 @@ public class DroneCompanyAuthService {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDTO.getCompanyId(), loginDTO.getCompanyPassword())
             );
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new AccessDeniedException("로그인 실패", ErrorCode.UNAUTHORIZED, "요청 받은 아이디 또는 비밀번호가 맞지 않습니다.");
         }
 
@@ -90,6 +90,11 @@ public class DroneCompanyAuthService {
 
         RefreshToken refreshTokenData = new RefreshToken(loginDTO.getCompanyId(), accessToken, refreshToken, refreshTokenExpirationAt);
 
+        droneCompanyRefreshTokenRepository.findByCompanyId(loginDTO.getCompanyId()).ifPresent(dummy -> {
+                    droneCompanyRefreshTokenRepository.deleteByCompanyId(loginDTO.getCompanyId());
+                    droneCompanyRefreshTokenRepository.flush();
+                }
+        );
         droneCompanyRefreshTokenRepository.save(refreshTokenData);
 
         result.put("accessToken", accessToken);
