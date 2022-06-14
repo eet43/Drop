@@ -37,13 +37,13 @@ public class CategoryController {
     }
 
     @PostMapping("/api/categories")
-    public CreateOrderResponse postCategory(@RequestBody @Valid SimpleCategoryDto categoryDto) {
+    public Long postCategory(@RequestBody @Valid SimpleCategoryDto categoryDto) {
         Category category = new Category();
         category.setName(categoryDto.getName());
         category.setCost(categoryDto.getCost());
 
         Long id = categoryService.saveCategory(category);
 
-        return new CreateOrderResponse(id);
+        return id;
     }
 }
