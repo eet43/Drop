@@ -57,4 +57,15 @@ public class DroneCompanyOwnDroneController {
         ResponseDetails responseDetails = new ResponseDetails(new Date(), uuidDto, httpStatus, path);
         return new ResponseEntity<>(responseDetails, HttpStatus.OK);
     }
+
+    @GetMapping("/api/drone-companies/drones")
+    @ApiOperation(value = "드론 업체 보유 드론 조회", notes = "드론 업체가 보유 드론을 조회합니다.")
+    public ResponseEntity<?> showOwnDrone(HttpServletRequest request) throws NoResourceException {
+        List<OwnDroneResponseDto> ownDroneResponseDto = droneCompanyOwnDroneService.show(request);
+        String path = "/api/drone-companies/drones";
+        int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
+        ResponseDetails responseDetails = new ResponseDetails(new Date(), ownDroneResponseDto, httpStatus, path);
+        return new ResponseEntity<>(responseDetails, HttpStatus.OK);
+    }
+
 }
