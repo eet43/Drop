@@ -1,15 +1,13 @@
 package com.drop.dropshop.order.controller;
 
-import com.drop.dropshop.order.dto.CreateOrderResponse;
-import com.drop.dropshop.order.dto.SimpleCategoryDto;
-import com.drop.dropshop.order.dto.Result;
-import com.drop.dropshop.order.dto.SimpleCategories;
+import com.drop.dropshop.order.dto.*;
 import com.drop.dropshop.order.entity.Category;
 import com.drop.dropshop.order.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,13 +35,13 @@ public class CategoryController {
     }
 
     @PostMapping("/api/categories")
-    public Long postCategory(@RequestBody @Valid SimpleCategoryDto categoryDto) {
+    public CreateCategoryResponse postCategory(@RequestBody @Valid SimpleCategoryDto categoryDto) {
         Category category = new Category();
         category.setName(categoryDto.getName());
         category.setCost(categoryDto.getCost());
 
         Long id = categoryService.saveCategory(category);
 
-        return id;
+        return new CreateCategoryResponse(category.getId(), LocalDateTime.now());
     }
 }
