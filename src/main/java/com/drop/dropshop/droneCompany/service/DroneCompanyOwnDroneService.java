@@ -181,4 +181,24 @@ public class DroneCompanyOwnDroneService {
         droneCompanyOwnDroneDetailRepository.deleteAllByCompanyDroneId(companyDroneId);
         return companyDroneId;
     }
+
+    public List<OwnDroneResponseDto> show(HttpServletRequest request) throws NoResourceException {
+        DroneCompany droneCompany = authenticationDroneCompany(request);
+        List<CompanyDrone> companyDroneList = droneCompanyOwnDroneRepository.findAllByCompanyId(droneCompany.getCompanyId());
+        List<OwnDroneResponseDto> ownDroneResponseDtoList = new ArrayList<>();
+        for(CompanyDrone companyDrone : companyDroneList){
+            List<CompanyDroneDetail> companyDroneDetailList = droneCompanyOwnDroneDetailRepository.findAllByCompanyDroneId(companyDrone.getCompanyDroneId());
+            DroneModel droneModel = findByModelId(companyDrone.getModelId());
+            OwnDroneResponseDto ownDroneResponseDto = new OwnDroneResponseDto(
+                    companyDrone.getCompanyDroneId(),
+                    companyDrone.getNum(),
+                    companyDrone.getOperableNum(),
+                    droneCompany,
+                    droneModel,
+                    companyDroneDetailList
+            );
+            ownDroneResponseDtoList.add(ownDroneResponseDto);
+        }
+        return ownDroneResponseDtoList;
+    }
 }
