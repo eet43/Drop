@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.UUID;
 
@@ -66,4 +67,15 @@ public class DroneCompanyController {
         ResponseDetails responseDetails = new ResponseDetails(new Date(), uuidDto, httpStatus, path);
         return new ResponseEntity<>(responseDetails, HttpStatus.OK);
     }
+
+    @GetMapping("/api/drone-companies")
+    @ApiOperation(value = "드론 업체 정보 조회", notes = "드론 업체가 업체 정보를 조회합니다.")
+    public ResponseEntity<?> showDetailDroneCompany(HttpServletRequest request) {
+        DroneCompany droneCompany = droneCompanyService.showDetail(request);
+        int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
+        String path = "/api/drone-companies";
+        ResponseDetails responseDetails = new ResponseDetails(new Date(), droneCompany, httpStatus, path);
+        return new ResponseEntity<>(responseDetails, HttpStatus.OK);
+    }
+
 }
