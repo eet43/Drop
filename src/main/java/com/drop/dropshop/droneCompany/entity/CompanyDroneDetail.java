@@ -26,7 +26,7 @@ public class CompanyDroneDetail extends Timestamped {
     @ApiModelProperty(example = "각 드론 재고 하나를 식별하는 uuid")
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, columnDefinition = "BINARY(16)")
     private UUID droneId;
 
     @ApiModelProperty(example = "업체의 보유 드론 목록을 식별하는 uuid")
