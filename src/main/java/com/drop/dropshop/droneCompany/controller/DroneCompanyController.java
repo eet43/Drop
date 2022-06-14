@@ -78,4 +78,14 @@ public class DroneCompanyController {
         return new ResponseEntity<>(responseDetails, HttpStatus.OK);
     }
 
+    @PutMapping("/api/drone-companies")
+    @ApiOperation(value = "드론 업체 정보 수정", notes = "드론 업체가 업체 정보를 수정합니다.")
+    public ResponseEntity<?> updateDroneCompany(HttpServletRequest request, @RequestBody DroneCompanyDto droneCompanyDto) throws BusinessNumberNotValidException, NoResourceException {
+        DroneCompany droneCompany = droneCompanyService.update(request, droneCompanyDto);
+        int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
+        String path = "/api/drone-companies";
+        ResponseDetails responseDetails = new ResponseDetails(new Date(), droneCompany, httpStatus, path);
+        return new ResponseEntity<>(responseDetails, HttpStatus.OK);
+    }
+
 }
