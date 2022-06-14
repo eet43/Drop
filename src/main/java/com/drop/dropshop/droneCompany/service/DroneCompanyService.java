@@ -169,4 +169,28 @@ public class DroneCompanyService {
     public DroneCompany showDetail(HttpServletRequest request) {
         return authenticationDroneCompany(request);
     }
+
+    /**
+     * 드론 업체 정보 수정
+     */
+    public DroneCompany update(HttpServletRequest request, DroneCompanyDto droneCompanyDto) throws BusinessNumberNotValidException, NoResourceException {
+        UUID companyId = authenticationDroneCompany(request).getCompanyId();
+        Optional<DroneCompany> droneCompanyOptional = droneCompanyRepository.findByCompanyId(companyId);
+
+        if (droneCompanyOptional.isEmpty()) {
+            String errorMessage = "요청 받은 drone company Id : " + companyId;
+            throw new NoResourceException("드론 업체 조회 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
+        }
+
+        DroneCompany droneCompany = droneCompanyOptional.get();
+
+        // 사업자 번호 검증
+        if (!validateBuisenessNumber(droneCompany.getBuisenessNumber())) {
+            String errorMessage = "요청 받은 사업자 번호 : " + droneCompany.getBuisenessNumber();
+            throw new BusinessNumberNotValidException("사업자 번호 검증 실패", ErrorCode.BUSINESS_NUMBER_NOT_VALID, errorMessage);
+        }
+
+        droneCompany.update(droneCompanyDto);
+        return droneCompany;
+    }
 }
