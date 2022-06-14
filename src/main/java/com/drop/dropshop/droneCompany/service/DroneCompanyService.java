@@ -6,15 +6,19 @@ import com.drop.dropshop.droneCompany.exception.BusinessNumberNotValidException;
 import com.drop.dropshop.droneCompany.exception.ErrorCode;
 import com.drop.dropshop.droneCompany.exception.NoResourceException;
 import com.drop.dropshop.droneCompany.repository.DroneCompanyRepository;
+import com.drop.dropshop.droneCompany.security.DroneDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
@@ -92,8 +96,20 @@ public class DroneCompanyService {
         return validateDuplicateId(newId);
     }
 
+    /**
+     * companyId 를 이용하여 드론 업체 식별
+     */
     public Optional<DroneCompany> findByCompanyId(UUID companyId) {
         return droneCompanyRepository.findByCompanyId(companyId);
+    }
+
+    /**
+     * 요청으로 받아온 인증 정보에서 DroneCompany 정보를 찾아 return
+     */
+    public DroneCompany authenticationDroneCompany(HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        DroneDetailsImpl droneDetails = (DroneDetailsImpl) authentication.getPrincipal();
+        return droneDetails.getDroneCompany();
     }
 
     /**
@@ -147,5 +163,10 @@ public class DroneCompanyService {
         return companyId;
     }
 
-
+    /**
+     * 드론 업체 정보 조회
+     */
+    public DroneCompany showDetail(HttpServletRequest request) {
+        return authenticationDroneCompany(request);
+    }
 }
