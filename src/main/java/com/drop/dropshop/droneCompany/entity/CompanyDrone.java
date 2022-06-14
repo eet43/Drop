@@ -1,5 +1,6 @@
 package com.drop.dropshop.droneCompany.entity;
 
+import com.drop.dropshop.droneCompany.dto.OwnDroneEnrollDto;
 import com.drop.dropshop.droneCompany.util.Timestamped;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -59,5 +60,11 @@ public class CompanyDrone extends Timestamped {
         this.basePrice = basePrice;
         this.num = num;
         this.operableNum = operableNum;
+    }
+
+    public void update(OwnDroneEnrollDto requestDto) {
+        this.basePrice = requestDto.getBasePrice();
+        this.num = requestDto.getNum();
+        this.operableNum = requestDto.getOperableNum();
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestAttribute;
 
 import javax.servlet.http.HttpServletRequest;
+import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,17 +45,46 @@ public class DroneCompanyOwnDroneService {
     }
 
     /**
+     * Drone Model ID 로 Drone Model 식별
+     */
+    public DroneModel findByModelId(UUID modelId) throws NoResourceException {
+        Optional<DroneModel> droneModel = droneModelRepository.findByModelId(modelId);
+        if (droneModel.isEmpty()) {
+            String errorMessage = "검색 요청 받은 Drone Model Id : " + modelId;
+            throw new NoResourceException("드론 모델 검색 불가", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
+        }
+        return droneModel.get();
+    }
+
+    /**
+     * droneDetailDto 로 이루어진 List 를 반복하여 company_own_drone save 진행
+     */
+    public List<CompanyDroneDetail> saveCompanyDroneDetailList(List<DroneDetailDto> droneDetailDtoList, UUID companyDroneId) {
+        List<CompanyDroneDetail> companyDroneDetailList = new ArrayList<>();
+
+        // 드론 업체의 상세 드론 정보 저장
+        for (DroneDetailDto companyDroneDetailDtoList : droneDetailDtoList) {
+            CompanyDroneDetail companyDroneDetail = new CompanyDroneDetail(companyDroneId,
+                    companyDroneDetailDtoList.getSerialNumber(),
+                    companyDroneDetailDtoList.getStatusCode(),
+                    companyDroneDetailDtoList.getRaceCode());
+            UUID droneId = UUID.randomUUID();
+            companyDroneDetail.setDroneId(droneId);
+            droneCompanyOwnDroneDetailRepository.save(companyDroneDetail);
+            companyDroneDetailList.add(companyDroneDetail);
+        }
+        return companyDroneDetailList;
+    }
+
+    /**
      * 드론 업체의 보유 드론 등록
      */
     public OwnDroneResponseDto enroll(OwnDroneEnrollDto requestDto, HttpServletRequest request) throws NoResourceException {
         // 드론 업체 식별 정보 가져오기
         DroneCompany droneCompany = authenticationDroneCompany(request);
 
-        Optional<DroneModel> droneModel = droneModelRepository.findByModelId(requestDto.getModelId());
-        if (droneModel.isEmpty()) {
-            String errorMessage = "등록 요청 받은 Drone Model Id : " + requestDto.getModelId();
-            throw new NoResourceException("드론 모델 검색 불가", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
-        }
+        // 드론 모델 정보 가져오기
+        DroneModel droneModel = findByModelId(requestDto.getModelId());
 
         // 드론 업체의 보유 드론 목록 저장
         CompanyDrone companyDrone = new CompanyDrone(droneCompany.getCompanyId(),
@@ -68,26 +98,58 @@ public class DroneCompanyOwnDroneService {
 
         droneCompanyOwnDroneRepository.save(companyDrone);
 
-        List<CompanyDroneDetail> companyDroneDetailList = new ArrayList<>();
-
-        // 드론 업체의 상세 드론 정보 저장
-        for (DroneDetailDto companyDroneDetailDtoList : requestDto.getCompanyDroneDetailList()) {
-            CompanyDroneDetail companyDroneDetail = new CompanyDroneDetail(companyDroneId,
-                    companyDroneDetailDtoList.getSerialNumber(),
-                    companyDroneDetailDtoList.getStatusCode(),
-                    companyDroneDetailDtoList.getRaceCode());
-            UUID droneId = UUID.randomUUID();
-            companyDroneDetail.setDroneId(droneId);
-            droneCompanyOwnDroneDetailRepository.save(companyDroneDetail);
-            companyDroneDetailList.add(companyDroneDetail);
-        }
+        List<CompanyDroneDetail> companyDroneDetailList = saveCompanyDroneDetailList(
+                requestDto.getCompanyDroneDetailList(), companyDroneId);
 
         return new OwnDroneResponseDto(
-                droneCompany,
-                droneModel.get(),
+                companyDroneId,
                 companyDrone.getNum(),
                 companyDrone.getOperableNum(),
+                droneCompany,
+                droneModel,
                 companyDroneDetailList
         );
+    }
+
+    /**
+     * 드론 업체 보유 드론 수정
+     */
+    public OwnDroneResponseDto update(OwnDroneEnrollDto requestDto, HttpServletRequest request, UUID companyDroneId) throws NoResourceException {
+        DroneCompany droneCompany = authenticationDroneCompany(request);
+        Optional<CompanyDrone> companyDroneOptional = droneCompanyOwnDroneRepository.findByCompanyIdAndCompanyDroneId(droneCompany.getCompanyId(), companyDroneId);
+
+        // company_drone 테이블에 해당 데이터가 없는 경우
+        if (companyDroneOptional.isEmpty()) {
+            String errorMessage = "수정 요청 받은 Company Drone Id : " + companyDroneId;
+            throw new NoResourceException("수정 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
+        } else {
+            // company_drone 테이블에 해당 데이터는 있지만 company_own_drone 테이블에 해당 데이터가 없는 경우
+            if (droneCompanyOwnDroneDetailRepository.findAllByCompanyDroneId(companyDroneId).isEmpty()) {
+                String errorMessage = "수정 요청 받은 Company Drone Id : " + companyDroneId;
+                throw new NoResourceException("수정 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
+            } else {
+                droneCompanyOwnDroneDetailRepository.deleteAllByCompanyDroneId(companyDroneId);
+                droneCompanyOwnDroneDetailRepository.flush();
+
+                // 업체의 드론 식별 후 업데이트
+                CompanyDrone companyDrone = companyDroneOptional.get();
+                companyDrone.update(requestDto);
+
+                // 업체의 드론 모델 식별
+                DroneModel droneModel = findByModelId(companyDrone.getModelId());
+
+                List<CompanyDroneDetail> companyDroneDetailList = saveCompanyDroneDetailList(
+                        requestDto.getCompanyDroneDetailList(), companyDroneId);
+
+                return new OwnDroneResponseDto(
+                        companyDroneId,
+                        companyDrone.getNum(),
+                        companyDrone.getOperableNum(),
+                        droneCompany,
+                        droneModel,
+                        companyDroneDetailList
+                );
+            }
+        }
     }
 }
