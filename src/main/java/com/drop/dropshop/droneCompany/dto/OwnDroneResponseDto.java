@@ -9,19 +9,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 public class OwnDroneResponseDto {
-    @ApiModelProperty(example = "드론 회사")
-    private final DroneCompany droneCompany;
-    @ApiModelProperty(example = "드론 모델")
-    private final DroneModel droneModel;
+    @ApiModelProperty(example = "업체의 보유 드론 목록을 식별하는 uuid")
+    private final UUID companyDroneId;
     @ApiModelProperty(example = "동일 모델 보유 드론 대수")
     private final int num;
     @ApiModelProperty(example = "동일 모델 운행 가능 드론 대수")
     private final int operableNum;
+    @ApiModelProperty(example = "드론 회사")
+    private final DroneCompany droneCompany;
+    @ApiModelProperty(example = "드론 모델")
+    private final DroneModel droneModel;
     @ApiModelProperty(example = "상세 드론 리스트")
     private final List<CompanyDroneDetail> companyDroneDetailList;
 }
