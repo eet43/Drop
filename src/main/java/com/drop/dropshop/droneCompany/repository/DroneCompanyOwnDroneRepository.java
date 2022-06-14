@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface DroneCompanyOwnDroneRepository extends JpaRepository<CompanyDrone, Long> {
     Optional<CompanyDrone> findByCompanyIdAndCompanyDroneId(UUID companyId, UUID companyDroneId);
+
+    void deleteByCompanyDroneId(UUID companyDroneId);
 }
