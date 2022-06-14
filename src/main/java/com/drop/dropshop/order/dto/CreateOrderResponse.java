@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CreateResponse {
+public class CreateOrderResponse {
     private Long id;
 }

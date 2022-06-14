@@ -1,11 +1,12 @@
 package com.drop.dropshop.order.dto;
 
+import com.drop.dropshop.order.entity.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class SimpleCategories {
+public class CancelOrderResponse {
     private Long id;
-    private String name;
+    private OrderStatus status;
 }
