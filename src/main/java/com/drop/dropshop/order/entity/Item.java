@@ -28,7 +28,6 @@ public class Item {
     private Order order;
 
     private float weight;
-    private float distance;
 
     private int totalPrice;
 
@@ -40,12 +39,11 @@ public class Item {
     }
 
     //==생성 로직==//
-    public static Item createItem(Category category, Long droneId, float weight, float distance) {
+    public static Item createItem(Category category, Long droneId, float weight) {
         Item item = new Item();
         item.addCategory(category);
         item.setDroneId(droneId);
         item.setWeight(weight);
-        item.setDistance(distance);
         item.setItemCreated(LocalDateTime.now());
 
         return item;
@@ -55,8 +53,8 @@ public class Item {
     /**
      * 배송 가격 계산
      */
-    public int getTotalPrice(int price) {
-        int value = (int) (price * getWeight() * getDistance() * category.getCost());
+    public int calTotalPrice(int price) {
+        int value = (int) (price * getWeight() * category.getCost());
         setTotalPrice(value);
         return value;
     }

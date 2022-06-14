@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -33,5 +35,15 @@ public class OrderServiceImpl implements OrderService{
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId);
         order.cancelOrder();
+    }
+
+    @Override
+    public Order findOrder(Long id) {
+        return orderRepository.findById(id);
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return orderRepository.findAll();
     }
 }

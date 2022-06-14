@@ -19,7 +19,7 @@ import java.util.List;
 public class ItemRepositoryImpl implements ItemRepository{
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public void save(Item item) {
@@ -35,5 +35,10 @@ public class ItemRepositoryImpl implements ItemRepository{
     @Override
     public Item findById(Long id) {
         return em.find(Item.class, id);
+    }
+
+    @Override
+    public void delete(Item item) {
+        em.remove(item);
     }
 }
