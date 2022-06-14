@@ -3,6 +3,7 @@ package com.drop.dropshop.droneCompany.controller;
 import com.drop.dropshop.droneCompany.dto.DroneDetailDto;
 import com.drop.dropshop.droneCompany.dto.OwnDroneEnrollDto;
 import com.drop.dropshop.droneCompany.dto.OwnDroneResponseDto;
+import com.drop.dropshop.droneCompany.dto.UUIDDto;
 import com.drop.dropshop.droneCompany.exception.NoResourceException;
 import com.drop.dropshop.droneCompany.response.ResponseDetails;
 import com.drop.dropshop.droneCompany.service.DroneCompanyOwnDroneService;
@@ -23,7 +24,7 @@ import java.util.UUID;
 public class DroneCompanyOwnDroneController {
     private DroneCompanyOwnDroneService droneCompanyOwnDroneService;
 
-    public DroneCompanyOwnDroneController(DroneCompanyOwnDroneService droneCompanyOwnDroneService){
+    public DroneCompanyOwnDroneController(DroneCompanyOwnDroneService droneCompanyOwnDroneService) {
         this.droneCompanyOwnDroneService = droneCompanyOwnDroneService;
     }
 
@@ -37,7 +38,6 @@ public class DroneCompanyOwnDroneController {
         return new ResponseEntity<>(responseDetails, HttpStatus.CREATED);
     }
 
-
     @PutMapping("/api/drone-companies/drones/{companyDroneId}")
     @ApiOperation(value = "드론 업체 보유 드론 수정", notes = "드론 업체가 보유 드론을 수정합니다.")
     public ResponseEntity<?> updateOwnDrone(@RequestBody OwnDroneEnrollDto requestDto, HttpServletRequest request, @PathVariable UUID companyDroneId) throws NoResourceException {
@@ -45,6 +45,16 @@ public class DroneCompanyOwnDroneController {
         String path = "/api/drone-companies/drones/" + companyDroneId;
         int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
         ResponseDetails responseDetails = new ResponseDetails(new Date(), ownDroneResponseDto, httpStatus, path);
+        return new ResponseEntity<>(responseDetails, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/api/drone-companies/drones/{companyDroneId}")
+    @ApiOperation(value = "드론 업체 보유 드론 삭제", notes = "드론 업체가 보유 드론을 삭제합니다.")
+    public ResponseEntity<?> deleteOwnDrone(@RequestBody OwnDroneEnrollDto requestDto, HttpServletRequest request, @PathVariable UUID companyDroneId) throws NoResourceException {
+        UUIDDto uuidDto = new UUIDDto(droneCompanyOwnDroneService.delete(requestDto, request, companyDroneId));
+        String path = "/api/drone-companies/drones/" + companyDroneId;
+        int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
+        ResponseDetails responseDetails = new ResponseDetails(new Date(), uuidDto, httpStatus, path);
         return new ResponseEntity<>(responseDetails, HttpStatus.OK);
     }
 }
