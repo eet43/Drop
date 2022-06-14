@@ -6,10 +6,7 @@ import com.drop.dropshop.deliveryAdmin.service.AnnounceLogService;
 import com.drop.dropshop.deliveryAdmin.util.ReverseGeocode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RequestMapping("/api/announce")
@@ -21,5 +18,11 @@ public class AnnounceLogController {
     @PostMapping("/log") // 배송요청 단말장치로 부터
     public ApiResponse<String> createAnnounceLog(@RequestBody RequestCreateLogDTO requestCreateLogDTO){
         return ApiResponse.success("result", announceLogService.createAnnounceLog(requestCreateLogDTO));
+    }
+
+    @GetMapping("/log/{orderId}") // 사용자의 위치 조회 요청에 응답
+    public ApiResponse<String> getLocationlog(@PathVariable String orderId){
+        String currentLocation = announceLogService.findAnnounceLog(orderId);
+        return ApiResponse.success("result", currentLocation);
     }
 }
