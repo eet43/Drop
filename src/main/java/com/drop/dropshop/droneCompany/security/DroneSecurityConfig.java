@@ -49,7 +49,7 @@ public class DroneSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/drone-companies*/**").hasRole("ADMIN")
 //                .antMatchers("/api/drone-models*").hasRole("ADMIN")
 //                .antMatchers("/api/drone-models*/**").hasRole("ADMIN")
-                .antMatchers("/api/drone-companies/**").hasRole("DRONE_COMPANY")
+//                .antMatchers("/api/drone-companies/**").hasRole("DRONE_COMPANY")
                 .antMatchers("/app/drones").permitAll()
                 .anyRequest().permitAll()
                 .and()

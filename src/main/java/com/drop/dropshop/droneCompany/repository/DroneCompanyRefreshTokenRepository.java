@@ -10,4 +10,6 @@ public interface DroneCompanyRefreshTokenRepository extends JpaRepository<Refres
     Optional<RefreshToken> findRefreshTokenByIdx(long refreshIdx);
 
     void deleteByCompanyId(String username);
+
+    Optional<RefreshToken> findByCompanyId(String companyId);
 }
