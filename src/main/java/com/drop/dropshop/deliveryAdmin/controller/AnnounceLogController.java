@@ -2,6 +2,7 @@ package com.drop.dropshop.deliveryAdmin.controller;
 
 import com.drop.dropshop.deliveryAdmin.common.ApiResponse;
 import com.drop.dropshop.deliveryAdmin.dto.createDTO.RequestCreateLogDTO;
+import com.drop.dropshop.deliveryAdmin.dto.responseDTO.ResponseLocationDTO;
 import com.drop.dropshop.deliveryAdmin.service.AnnounceLogService;
 import com.drop.dropshop.deliveryAdmin.util.ReverseGeocode;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class AnnounceLogController {
     }
 
     @GetMapping("/log/{orderId}") // 사용자의 위치 조회 요청에 응답
-    public ApiResponse<String> getLocationlog(@PathVariable String orderId){
-        String currentLocation = announceLogService.findAnnounceLog(orderId);
+    public ApiResponse<ResponseLocationDTO> getLocationlog(@PathVariable String orderId){
+        ResponseLocationDTO currentLocation = announceLogService.findAnnounceLog(orderId);
         return ApiResponse.success("result", currentLocation);
     }
 }
