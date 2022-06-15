@@ -1,5 +1,6 @@
 package com.drop.dropshop.deliveryAdmin.entity;
 
+import com.drop.dropshop.deliveryAdmin.dto.updateDTO.RequestUpdateLogDTO;
 import com.drop.dropshop.deliveryAdmin.util.DeliveryLogTimestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,5 +31,11 @@ public class AnnounceLog extends DeliveryLogTimestamped{
         this.orderId = orderId;
         this.phoneNumber = phoneNumber;
         this.currentLocation = currentLocation;
+    }
+
+    public void updateLog(RequestUpdateLogDTO requestUpdateLogDTO){
+        // 좌표 정보 수정 요청시 필요한 DTO
+        this.orderId = requestUpdateLogDTO.getOrderId();
+        this.currentLocation = requestUpdateLogDTO.getCurrentLocation();
     }
 }
