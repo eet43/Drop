@@ -2,6 +2,7 @@ package com.drop.dropshop.deliveryAdmin.entity;
 
 import com.drop.dropshop.deliveryAdmin.dto.createDTO.RequestCreateLogDTO;
 import com.drop.dropshop.deliveryAdmin.dto.createDTO.RequestCreateStatusDTO;
+import com.drop.dropshop.deliveryAdmin.dto.updateDTO.RequestUpdateStatusDTO;
 import com.drop.dropshop.deliveryAdmin.util.DeliveryStatusTimestamped;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -46,5 +47,10 @@ public class DeliveryStatus extends DeliveryStatusTimestamped {
         this.description = requestCreateStatusDTO.getDescription();
         this.returned = false;
         this.success_check = false;
+    }
+
+    public void updateStatus(RequestUpdateStatusDTO requestUpdateStatusDTO){
+        this.returned = requestUpdateStatusDTO.isReturned();
+        this.success_check = requestUpdateStatusDTO.isSuccess_check();
     }
 }
