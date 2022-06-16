@@ -14,11 +14,4 @@ public class RequestCreateLogDTO {
     private String orderId;             // 주문 id
     private String phoneNumber;         // 사용자 식별,
     private String currentLocation;     // 현재 위치 주소 (ron, rat 좌표값)
-
-    @Builder
-    public RequestCreateLogDTO(String orderId, String phoneNumber, String currentLocation){
-        this.orderId = orderId;
-        this.phoneNumber = phoneNumber;
-        this.currentLocation = currentLocation;
-    }
 }
