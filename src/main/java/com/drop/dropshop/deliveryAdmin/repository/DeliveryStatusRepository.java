@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface DeliveryStatusRepository extends JpaRepository<DeliveryStatus, Long> {
+public interface DeliveryStatusRepository extends JpaRepository<DeliveryStatus, String> {
 
 }
