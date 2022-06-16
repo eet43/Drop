@@ -2,6 +2,7 @@ package com.drop.dropshop.deliveryAdmin.service;
 
 import com.drop.dropshop.deliveryAdmin.dto.createDTO.RequestCreateStatusDTO;
 import com.drop.dropshop.deliveryAdmin.dto.responseDTO.ResponseDeliveryStatusDTO;
+import com.drop.dropshop.deliveryAdmin.dto.updateDTO.RequestUpdateStatusDTO;
 import com.drop.dropshop.deliveryAdmin.entity.DeliveryStatus;
 import com.drop.dropshop.deliveryAdmin.repository.DeliveryStatusRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,14 @@ public class DeliveryStatusAdminService {
         return ResponseDeliveryStatusDTO.builder()
                 .deliveryStatus(deliveryStatus)
                 .build();
+    }
+
+
+    public String updateDeliveryStatus(RequestUpdateStatusDTO requestUpdateStatusDTO){
+        DeliveryStatus deliveryStatus = deliveryStatusRepository.findById(requestUpdateStatusDTO.getOrderId()).orElseThrow(
+                ()-> new NullPointerException("아이디가 존재 안함무라이법전")
+        );
+        deliveryStatus.updateStatus(requestUpdateStatusDTO);
+        return deliveryStatusRepository.save(deliveryStatus).getOrderId();
     }
 }
