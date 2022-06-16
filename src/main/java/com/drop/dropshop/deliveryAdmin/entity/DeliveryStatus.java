@@ -1,13 +1,17 @@
 package com.drop.dropshop.deliveryAdmin.entity;
 
-import com.drop.dropshop.deliveryAdmin.dto.DeliveryStatusDto;
+import com.drop.dropshop.deliveryAdmin.dto.createDTO.RequestCreateLogDTO;
+import com.drop.dropshop.deliveryAdmin.dto.createDTO.RequestCreateStatusDTO;
 import com.drop.dropshop.deliveryAdmin.util.DeliveryStatusTimestamped;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Setter @Getter
 @NoArgsConstructor
@@ -15,17 +19,13 @@ import javax.persistence.*;
 public class DeliveryStatus extends DeliveryStatusTimestamped {
     // 배송 상태 엔티티//
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @ApiModelProperty(example = "db id, apply auto_increase: 배달 상태 테이블 아이디")
-    private Long id;
-
     @Column(nullable = false, unique = true, length = 30)
     @ApiModelProperty(example = "orderId, Table identification information: 주문 아이디")
     private String orderId;
 
     @Column(nullable = false, length = 30)
     @ApiModelProperty(example = "a description of a product: 목적지 주소")
-    private String destination_address;
+    private String destinationAddress;
 
     @Column(nullable = false, length = 150)
     @ApiModelProperty(example = "destination_address, a description of a product: 상품 설명")
@@ -39,11 +39,12 @@ public class DeliveryStatus extends DeliveryStatusTimestamped {
     @ApiModelProperty(example = "delivery success_check, delivery complete or not: 배송 성공 여부")
     private boolean success_check;
 
-    public DeliveryStatus(DeliveryStatusDto requestDto){
-        this.orderId = requestDto.getOrderId();
-        this.destination_address = requestDto.getDestination_address();
-        this.description = requestDto.getDescription();
-        this.returned = requestDto.isReturned();
-        this.success_check = requestDto.isSuccess_check();
+    @Builder
+    public DeliveryStatus(RequestCreateStatusDTO requestCreateStatusDTO){
+        this.orderId = requestCreateStatusDTO.getOrderId();
+        this.destinationAddress = requestCreateStatusDTO.getDestinationAddress();
+        this.description = requestCreateStatusDTO.getDescription();
+        this.returned = false;
+        this.success_check = false;
     }
 }
