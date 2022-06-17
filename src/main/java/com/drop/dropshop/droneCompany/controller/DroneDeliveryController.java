@@ -12,10 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.Map;
@@ -34,9 +31,19 @@ public class DroneDeliveryController {
     @ApiOperation(value = "드론 운행 상태 수정", notes = "드론 업체가 드론 운행 상태를 변경합니다.")
     public ResponseEntity<?> updateDroneDelivery(@RequestBody Map<String, String> requestObject, @PathVariable UUID droneId) throws NoResourceException {
         CompanyDroneDetail companyDroneDetail = droneDeliveryService.update(requestObject, droneId);
-        String path = "/api/drone-models/" + droneId;
+        String path = "/api/drone-companies/drones/" + droneId + "/status";
         int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
         ResponseDetails responseDetails = new ResponseDetails(new Date(), companyDroneDetail, httpStatus, path);
+        return new ResponseEntity<>(responseDetails, HttpStatus.OK);
+    }
+
+    @PostMapping("/api/drone-companies/drones/{droneId}/location")
+    @ApiOperation(value = "드론 위치 전달", notes = "드론에서 보내는 위치를 받아 배달 도메인으로 전달합니다.")
+    public ResponseEntity<?> locationDroneDelivery(@RequestBody Map<String, String> requestObject, @PathVariable UUID droneId) throws NoResourceException {
+        droneDeliveryService.location(requestObject, droneId);
+        String path = "/api/drone-companies/drones/" + droneId + "/location";
+        int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
+        ResponseDetails responseDetails = new ResponseDetails(new Date(), "", httpStatus, path);
         return new ResponseEntity<>(responseDetails, HttpStatus.OK);
     }
 }

@@ -37,4 +37,11 @@ public class DroneDeliveryService {
         companyDroneDetail.updateRaceStatus(RaceCode.valueOf(raceStatus));
         return companyDroneDetail;
     }
+
+    /**
+     * 드론 위치 전달 -> 이후 메세지 큐 구현
+     */
+    public void location(Map<String, String> requestObject, UUID droneId) {
+        //메세지 큐 적용해보기
+    }
 }
