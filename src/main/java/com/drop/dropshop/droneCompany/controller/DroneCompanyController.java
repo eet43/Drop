@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class DroneCompanyController {
         this.droneCompanyService = droneCompanyService;
     }
 
-    @PostMapping("/api/drone-companies")
+    @PostMapping("/api/admin/drone-companies")
     @ApiOperation(value = "드론 업체 등록", notes = "관리자가 드론 업체를 등록합니다.")
     public ResponseEntity<?> createDroneCompany(@RequestBody DroneCompanyDto requestDto) throws BusinessNumberNotValidException {
         DroneCompany droneCompany = droneCompanyService.join(requestDto);
@@ -41,7 +42,7 @@ public class DroneCompanyController {
         return new ResponseEntity<>(responseDetails, HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/drone-companies")
+    @GetMapping("/api/admin/drone-companies")
     @ApiOperation(value = "드론 업체 리스트 조회", notes = "관리자가 드론 업체를 조회합니다.")
     public ResponseEntity<?> showAllDroneCompany(@PageableDefault(page = 1, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<DroneCompany> droneCompanyList = droneCompanyService.show(pageable);
@@ -56,7 +57,7 @@ public class DroneCompanyController {
         return new ResponseEntity<>(pagingResponseDetails, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/drone-companies/{id}")
+    @DeleteMapping("/api/admin/drone-companies/{id}")
     @ApiOperation(value = "드론 업체 삭제", notes = "관리자가 드론 업체를 삭제합니다.")
     public ResponseEntity<?> deleteDroneCompany(@PathVariable UUID id) throws NoResourceException {
         UUID result = droneCompanyService.delete(id);
@@ -66,4 +67,25 @@ public class DroneCompanyController {
         ResponseDetails responseDetails = new ResponseDetails(new Date(), uuidDto, httpStatus, path);
         return new ResponseEntity<>(responseDetails, HttpStatus.OK);
     }
+
+    @GetMapping("/api/drone-companies")
+    @ApiOperation(value = "드론 업체 정보 조회", notes = "드론 업체가 업체 정보를 조회합니다.")
+    public ResponseEntity<?> showDetailDroneCompany(HttpServletRequest request) {
+        DroneCompany droneCompany = droneCompanyService.showDetail(request);
+        int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
+        String path = "/api/drone-companies";
+        ResponseDetails responseDetails = new ResponseDetails(new Date(), droneCompany, httpStatus, path);
+        return new ResponseEntity<>(responseDetails, HttpStatus.OK);
+    }
+
+    @PutMapping("/api/drone-companies")
+    @ApiOperation(value = "드론 업체 정보 수정", notes = "드론 업체가 업체 정보를 수정합니다.")
+    public ResponseEntity<?> updateDroneCompany(HttpServletRequest request, @RequestBody DroneCompanyDto droneCompanyDto) throws BusinessNumberNotValidException, NoResourceException {
+        DroneCompany droneCompany = droneCompanyService.update(request, droneCompanyDto);
+        int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
+        String path = "/api/drone-companies";
+        ResponseDetails responseDetails = new ResponseDetails(new Date(), droneCompany, httpStatus, path);
+        return new ResponseEntity<>(responseDetails, HttpStatus.OK);
+    }
+
 }
