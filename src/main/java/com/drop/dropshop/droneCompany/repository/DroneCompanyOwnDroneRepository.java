@@ -13,4 +13,6 @@ public interface DroneCompanyOwnDroneRepository extends JpaRepository<CompanyDro
     void deleteByCompanyDroneId(UUID companyDroneId);
 
     List<CompanyDrone> findAllByCompanyId(UUID companyId);
+
+    List<CompanyDrone> findAllByModelIdAndOperableNumGreaterThanEqual(UUID modelId, int i);
 }
