@@ -1,6 +1,7 @@
 package com.drop.dropshop.droneCompany.controller;
 
 import com.drop.dropshop.droneCompany.dto.DroneModelDto;
+import com.drop.dropshop.droneCompany.dto.OwnDroneResponseDto;
 import com.drop.dropshop.droneCompany.entity.CompanyDroneDetail;
 import com.drop.dropshop.droneCompany.entity.DroneModel;
 import com.drop.dropshop.droneCompany.exception.NoResourceException;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -23,17 +25,17 @@ import java.util.UUID;
 public class DroneDeliveryController {
     private DroneDeliveryService droneDeliveryService;
 
-    public DroneDeliveryController(DroneDeliveryService droneDeliveryService){
+    public DroneDeliveryController(DroneDeliveryService droneDeliveryService) {
         this.droneDeliveryService = droneDeliveryService;
     }
 
     @PutMapping("/api/drone-companies/drones/{droneId}/status")
     @ApiOperation(value = "드론 운행 상태 수정", notes = "드론 업체가 드론 운행 상태를 변경합니다.")
-    public ResponseEntity<?> updateDroneDelivery(@RequestBody Map<String, String> requestObject, @PathVariable UUID droneId) throws NoResourceException {
-        CompanyDroneDetail companyDroneDetail = droneDeliveryService.update(requestObject, droneId);
+    public ResponseEntity<?> updateDroneDelivery(@RequestBody Map<String, String> requestObject, @PathVariable UUID droneId, HttpServletRequest request) throws NoResourceException {
+        OwnDroneResponseDto ownDroneResponseDto = droneDeliveryService.update(requestObject, droneId, request);
         String path = "/api/drone-companies/drones/" + droneId + "/status";
         int httpStatus = HttpStatusChangeInt.ChangeStatusCode("OK");
-        ResponseDetails responseDetails = new ResponseDetails(new Date(), companyDroneDetail, httpStatus, path);
+        ResponseDetails responseDetails = new ResponseDetails(new Date(), ownDroneResponseDto, httpStatus, path);
         return new ResponseEntity<>(responseDetails, HttpStatus.OK);
     }
 
