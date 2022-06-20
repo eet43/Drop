@@ -15,4 +15,6 @@ public interface DroneCompanyOwnDroneRepository extends JpaRepository<CompanyDro
     List<CompanyDrone> findAllByCompanyId(UUID companyId);
 
     List<CompanyDrone> findAllByModelIdAndOperableNumGreaterThanEqual(UUID modelId, int i);
+
+    Optional<CompanyDrone> findByCompanyDroneId(UUID companyDroneId);
 }

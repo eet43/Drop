@@ -67,4 +67,8 @@ public class CompanyDrone extends Timestamped {
         this.num = requestDto.getNum();
         this.operableNum = requestDto.getOperableNum();
     }
+
+    public void updateOperableNum(int i) {
+        this.operableNum = i;
+    }
 }
