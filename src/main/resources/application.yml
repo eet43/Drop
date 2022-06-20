@@ -1,9 +1,13 @@
 spring:
+  main:
+      allow-bean-definition-overriding: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/drops?serverTimezone=Asia/Seoul
     username: a1b3
     password: 1234
+
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,7 +22,10 @@ spring:
       pageable:
         default-page-size: 10
         one-indexed-parameters: true
+  profiles:
+    include: API-KEY
 
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
+

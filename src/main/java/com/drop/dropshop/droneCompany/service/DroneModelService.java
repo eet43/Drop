@@ -62,8 +62,7 @@ public class DroneModelService {
         return droneModel;
     }
 
-    /**
-     * 드론 모델 삭제
+    /**     * 드론 모델 삭제
      */
     public UUID delete(UUID droneModelId) throws NoResourceException {
         if(droneModelRepository.findByModelId(droneModelId).isEmpty()){

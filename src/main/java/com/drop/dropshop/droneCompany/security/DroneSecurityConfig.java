@@ -3,6 +3,7 @@ package com.drop.dropshop.droneCompany.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -13,9 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-
+@Order(-1)
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -44,7 +44,9 @@ public class DroneSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/drone-companies/login").permitAll()
                 .antMatchers("/api/drone-companies/logout").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/drone-companies").permitAll()
+//                .antMatchers(HttpMethod.POST, "/api/drone-companies").permitAll()
+                .antMatchers("/api/drone-companies*").authenticated()
+                .antMatchers("/api/drone-companies*/**").authenticated()
 //                .antMatchers("/api/drone-companies*").hasRole("ADMIN")
 //                .antMatchers("/api/drone-companies*/**").hasRole("ADMIN")
 //                .antMatchers("/api/drone-models*").hasRole("ADMIN")
@@ -57,5 +59,4 @@ public class DroneSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
     }
-
 }

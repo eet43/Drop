@@ -8,8 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 public class DropshopApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DropshopApplication.class, args);
-	}
+    public static void main(String[] args) {SpringApplication.run(DropshopApplication.class, args);
+    }
 
 }
