@@ -59,4 +59,10 @@ public class DroneCompany extends Timestamped {
         this.companyContract = droneCompanyDto.getCompanyContract();
         this.buisenessNumber = droneCompanyDto.getBuisenessNumber();
     }
+
+    public void update(DroneCompanyDto droneCompanyDto){
+        this.companyName = droneCompanyDto.getCompanyName();
+        this.companyContract = droneCompanyDto.getCompanyContract();
+        this.buisenessNumber = droneCompanyDto.getBuisenessNumber();
+    }
 }

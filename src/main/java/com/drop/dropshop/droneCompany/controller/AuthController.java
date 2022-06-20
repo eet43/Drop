@@ -1,4 +1,4 @@
-package com.drop.dropshop.droneCompany.repository.controller;
+package com.drop.dropshop.droneCompany.controller;
 
 import com.drop.dropshop.droneCompany.dto.AuthDTO;
 import com.drop.dropshop.droneCompany.dto.TokenDto;

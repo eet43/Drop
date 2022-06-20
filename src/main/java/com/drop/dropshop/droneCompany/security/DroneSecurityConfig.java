@@ -13,8 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-
 
 @Configuration
 @EnableWebSecurity
@@ -44,7 +42,9 @@ public class DroneSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/drone-companies/login").permitAll()
                 .antMatchers("/api/drone-companies/logout").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/drone-companies").permitAll()
+//                .antMatchers(HttpMethod.POST, "/api/drone-companies").permitAll()
+                .antMatchers("/api/drone-companies*").authenticated()
+                .antMatchers("/api/drone-companies*/**").authenticated()
 //                .antMatchers("/api/drone-companies*").hasRole("ADMIN")
 //                .antMatchers("/api/drone-companies*/**").hasRole("ADMIN")
 //                .antMatchers("/api/drone-models*").hasRole("ADMIN")
@@ -57,5 +57,4 @@ public class DroneSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
     }
-
 }

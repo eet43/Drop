@@ -6,15 +6,19 @@ import com.drop.dropshop.droneCompany.exception.BusinessNumberNotValidException;
 import com.drop.dropshop.droneCompany.exception.ErrorCode;
 import com.drop.dropshop.droneCompany.exception.NoResourceException;
 import com.drop.dropshop.droneCompany.repository.DroneCompanyRepository;
+import com.drop.dropshop.droneCompany.security.DroneDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
@@ -92,8 +96,20 @@ public class DroneCompanyService {
         return validateDuplicateId(newId);
     }
 
+    /**
+     * companyId 를 이용하여 드론 업체 식별
+     */
     public Optional<DroneCompany> findByCompanyId(UUID companyId) {
         return droneCompanyRepository.findByCompanyId(companyId);
+    }
+
+    /**
+     * 요청으로 받아온 인증 정보에서 DroneCompany 정보를 찾아 return
+     */
+    public DroneCompany authenticationDroneCompany(HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        DroneDetailsImpl droneDetails = (DroneDetailsImpl) authentication.getPrincipal();
+        return droneDetails.getDroneCompany();
     }
 
     /**
@@ -147,5 +163,34 @@ public class DroneCompanyService {
         return companyId;
     }
 
+    /**
+     * 드론 업체 정보 조회
+     */
+    public DroneCompany showDetail(HttpServletRequest request) {
+        return authenticationDroneCompany(request);
+    }
 
+    /**
+     * 드론 업체 정보 수정
+     */
+    public DroneCompany update(HttpServletRequest request, DroneCompanyDto droneCompanyDto) throws BusinessNumberNotValidException, NoResourceException {
+        UUID companyId = authenticationDroneCompany(request).getCompanyId();
+        Optional<DroneCompany> droneCompanyOptional = droneCompanyRepository.findByCompanyId(companyId);
+
+        if (droneCompanyOptional.isEmpty()) {
+            String errorMessage = "요청 받은 drone company Id : " + companyId;
+            throw new NoResourceException("드론 업체 조회 실패", ErrorCode.RESOURCE_NOT_FOUND, errorMessage);
+        }
+
+        DroneCompany droneCompany = droneCompanyOptional.get();
+
+        // 사업자 번호 검증
+        if (!validateBuisenessNumber(droneCompany.getBuisenessNumber())) {
+            String errorMessage = "요청 받은 사업자 번호 : " + droneCompany.getBuisenessNumber();
+            throw new BusinessNumberNotValidException("사업자 번호 검증 실패", ErrorCode.BUSINESS_NUMBER_NOT_VALID, errorMessage);
+        }
+
+        droneCompany.update(droneCompanyDto);
+        return droneCompany;
+    }
 }
