@@ -1,8 +1,7 @@
 //package com.drop.dropshop;
-<<<<<<< HEAD
-=======
+
 //
->>>>>>> 5175b03258ebb6e8e498c2f9fa0c963063187920
+
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
 //import springfox.documentation.builders.ApiInfoBuilder;
@@ -25,11 +24,11 @@
 //                .apis(RequestHandlerSelectors.basePackage("com.drop.dropshop"))
 //                .paths(PathSelectors.any())
 //                .build();
-<<<<<<< HEAD
+
 ////    }
-=======
+
 //    }
->>>>>>> 5175b03258ebb6e8e498c2f9fa0c963063187920
+
 //
 //    private ApiInfo apiInfo() {
 //        return new ApiInfoBuilder()

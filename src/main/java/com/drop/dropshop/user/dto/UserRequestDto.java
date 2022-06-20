@@ -15,6 +15,5 @@ public class UserRequestDto {
     private String phoneNumber;
     private String email;
     private String address;
-//    private String role;
     private UserRole role;
 }

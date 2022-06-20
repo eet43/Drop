@@ -1,4 +1,4 @@
-package com.drop.dropshop.droneCompany.controller;
+package com.drop.dropshop.droneCompany.repository.controller;
 
 import com.drop.dropshop.droneCompany.dto.DroneCompanyDto;
 import com.drop.dropshop.droneCompany.dto.DroneModelDto;
