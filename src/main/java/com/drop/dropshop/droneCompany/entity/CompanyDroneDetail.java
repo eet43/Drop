@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.aspectj.apache.bcel.classfile.Code;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -53,4 +54,9 @@ public class CompanyDroneDetail extends Timestamped {
         this.statusCode = statusCode;
         this.raceCode = raceCode;
     }
+
+    public void updateRaceStatus(RaceCode raceCode) {
+        this.raceCode = raceCode;
+    }
+
 }

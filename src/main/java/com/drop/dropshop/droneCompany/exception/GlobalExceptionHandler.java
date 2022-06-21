@@ -1,11 +1,13 @@
 package com.drop.dropshop.droneCompany.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
 
 @Slf4j
 @RestControllerAdvice
@@ -30,6 +32,16 @@ public class GlobalExceptionHandler {
         log.error("AccessDeniedException", ex);
         ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getDetail());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(OpenApiResponseErrorException.class)
+    public ResponseEntity<OpenApiErrorResponse> openApiResponseErrorException(OpenApiResponseErrorException ex) {
+        log.error("OpenApiResponseErrorException", ex);
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("status", ex.getApiErrorCode().toString());
+        map.put("errorMessage", ex.getApiErrorMessage().toString());
+        OpenApiErrorResponse response = new OpenApiErrorResponse(ex.getErrorCode(), map);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

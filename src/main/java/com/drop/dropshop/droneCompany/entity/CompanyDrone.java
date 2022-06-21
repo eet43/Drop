@@ -39,7 +39,7 @@ public class CompanyDrone extends Timestamped {
     @ApiModelProperty(example = "드론 모델을 식별하는 uuid")
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(nullable = false, unique = true, columnDefinition = "BINARY(16)")
+    @Column(nullable = false, columnDefinition = "BINARY(16)")
     private UUID modelId;
 
     @Column(nullable = false)
@@ -66,5 +66,9 @@ public class CompanyDrone extends Timestamped {
         this.basePrice = requestDto.getBasePrice();
         this.num = requestDto.getNum();
         this.operableNum = requestDto.getOperableNum();
+    }
+
+    public void updateOperableNum(int i) {
+        this.operableNum = i;
     }
 }
