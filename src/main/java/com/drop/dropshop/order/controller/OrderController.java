@@ -55,6 +55,4 @@ public class OrderController {
         findOrder.cancelOrder();
         return new CancelOrderResponse(findOrder.getId(), findOrder.getStatus());
     }
-
-    //취소 메소드 필요.
 }
